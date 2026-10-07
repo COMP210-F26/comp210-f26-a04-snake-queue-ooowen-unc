@@ -58,7 +58,10 @@ public class Snake {
      * nothing leaves, and the snake is one cell longer.
      */
     public void advance(Cell newHead, boolean grow) {
-        // TODO: two queue operations, one of them only when not growing
+        body.enqueue(newHead);
+        if (!grow) {
+            body.dequeue();
+        }
     }
 
     /**
@@ -66,7 +69,9 @@ public class Snake {
      * snake still has at least one cell left, false if it is gone.
      */
     public boolean shrink() {
-        // TODO
-        return false;
+        if (!body.isEmpty()) {
+            body.dequeue();
+        }
+        return !body.isEmpty();
     }
 }

@@ -3,6 +3,7 @@ package comp210.a4;
 import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,6 +43,10 @@ class StarterTest {
         LinkedQueue<Integer> q = new LinkedQueue<>();
         assertTrue(q.isEmpty());
         assertThrows(NoSuchElementException.class, q::dequeue);
+        assertThrows(NoSuchElementException.class, q::peek);
+        assertThrows(NoSuchElementException.class, q::peekLast);
+        assertThrows(IllegalArgumentException.class, () -> q.enqueue(null));
+        assertEquals(0, q.size());
     }
 
     @Test
@@ -67,5 +72,41 @@ class StarterTest {
         s.advance(new Cell(6, 5), true);
         assertEquals(4, s.length());
         assertEquals(new Cell(3, 5), s.tail(), "nothing should leave when growing");
+    }
+
+    @Test
+    void queueCanBeReusedAfterRemovingItsLastItem() {
+        LinkedQueue<Integer> q = new LinkedQueue<>();
+        q.enqueue(1);
+        assertEquals(1, q.dequeue());
+        assertTrue(q.isEmpty());
+        q.enqueue(2);
+        assertEquals(2, q.peek());
+        assertEquals(2, q.peekLast());
+        assertEquals(1, q.size());
+        assertEquals(2, q.dequeue());
+    }
+
+    @Test
+    void snakeShrinksFromItsTailUntilGone() {
+        Snake s = new Snake(new Cell(5, 5), 3, Direction.EAST);
+        assertTrue(s.shrink());
+        assertEquals(new Cell(4, 5), s.tail());
+        assertEquals(new Cell(5, 5), s.head());
+        assertEquals(2, s.length());
+        assertTrue(s.shrink());
+        assertFalse(s.shrink());
+        assertEquals(0, s.length());
+        assertFalse(s.shrink());
+    }
+
+    @Test
+    void gameOverBombEndsTheGameImmediately() {
+        GameState state = new GameState(30, 30, new Random(0), GameState.BombRule.GAME_OVER);
+        Cell next = state.getSnake().head().step(Direction.EAST, 30, 30);
+        state.placeApple(new Cell(0, 0));
+        state.placeBomb(0, next);
+        assertEquals(GameState.Status.BLOWN_UP, state.tick());
+        assertEquals(3, state.getSnake().length());
     }
 }

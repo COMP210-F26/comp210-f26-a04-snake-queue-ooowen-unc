@@ -39,7 +39,17 @@ public class LinkedQueue<E> implements Iterable<E> {
      * @throws IllegalArgumentException if item is null
      */
     public void enqueue(E item) {
-        // TODO
+        if (item == null) {
+            throw new IllegalArgumentException();
+        }
+        Node<E> node = new Node<>(item);
+        if (isEmpty()) {
+            head = node;
+        } else {
+            tail.next = node;
+        }
+        tail = node;
+        size++;
     }
 
     /**
@@ -48,8 +58,13 @@ public class LinkedQueue<E> implements Iterable<E> {
      * @throws NoSuchElementException if the queue is empty
      */
     public E dequeue() {
-        // TODO
-        return null;
+        E item = peek();
+        head = head.next;
+        size--;
+        if (isEmpty()) {
+            tail = null;
+        }
+        return item;
     }
 
     /**
@@ -58,8 +73,10 @@ public class LinkedQueue<E> implements Iterable<E> {
      * @throws NoSuchElementException if the queue is empty
      */
     public E peek() {
-        // TODO
-        return null;
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        return head.data;
     }
 
     /**
@@ -68,20 +85,20 @@ public class LinkedQueue<E> implements Iterable<E> {
      * @throws NoSuchElementException if the queue is empty
      */
     public E peekLast() {
-        // TODO
-        return null;
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        return tail.data;
     }
 
     /** Returns how many items are in the queue. */
     public int size() {
-        // TODO
-        return 0;
+        return size;
     }
 
     /** Returns true when the queue holds no items. */
     public boolean isEmpty() {
-        // TODO
-        return true;
+        return size == 0;
     }
 
     /**
@@ -89,7 +106,11 @@ public class LinkedQueue<E> implements Iterable<E> {
      * equals, not ==. This is the one method allowed to walk the chain.
      */
     public boolean contains(E item) {
-        // TODO
+        for (Node<E> node = head; node != null; node = node.next) {
+            if (node.data.equals(item)) {
+                return true;
+            }
+        }
         return false;
     }
 

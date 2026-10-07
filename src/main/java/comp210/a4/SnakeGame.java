@@ -27,7 +27,7 @@ public class SnakeGame extends NonBlockingGame {
     //
     // Either one is fine. Your shrink() is graded the same way under both.
     // ------------------------------------------------------------------
-    static final GameState.BombRule BOMB_RULE = GameState.BombRule.SHRINK;
+    static final GameState.BombRule BOMB_RULE = GameState.BombRule.GAME_OVER;
 
     static final int COLUMNS = 30;
     static final int ROWS = 30;
